@@ -1,0 +1,53 @@
+body {
+    background-image: url(/images/cover.jpg);
+    background-position: center;
+    color: azure;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+}
+
+a:link,
+a:visited {
+    color: azure;
+    text-decoration: none;
+}
+
+a:hover {
+    background-color: rgb(37, 95, 97);
+    border-radius: 15%;
+}
+
+header {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 2rem;
+    background-color: #333333;
+}
+
+header h1 {
+    margin: auto auto;
+}
+
+header ul {
+    display: flex;
+    list-style-type: none;
+    margin-left: 25%;
+}
+
+header ul li a {
+    display: block;
+    padding: 1rem;
+    font-weight: bold;
+}
+
+footer {
+    display: grid;
+    grid-template-columns: 1f;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    text-align: center;
+    background-color: #333333;
+    font-weight: bold;
+}
