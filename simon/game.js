@@ -11,11 +11,15 @@ var level = 0;
 var replay = 0;
 
 $(document).on("keypress", function() {
-   if (!started) {
-    nextSequence();
-    started = true;
-   }
+    gameStart();
 })
+
+function gameStart() {
+    if (!started) {
+        nextSequence();
+        started = true;
+       }
+}
 
 $(".btn").click(function() {
     var userChosenColour = $(this).attr("id");

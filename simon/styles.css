@@ -26,6 +26,13 @@ body {
   border-radius: 20%;
 }
 
+#starter {
+  margin: auto;
+  text-align: center;
+  color: white;
+  font-size: 2rem;
+}
+
 .game-over {
   background-color: red;
   opacity: 0.8;
