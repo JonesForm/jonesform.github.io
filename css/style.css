@@ -9,6 +9,14 @@ body {
     background: darkgray;
 }
 
+div a:link,div a:visited {
+    color: lime;
+}
+
+a {
+    text-decoration: none;
+}
+
 header {
     background-color: var(--background);
     height: 50px;
