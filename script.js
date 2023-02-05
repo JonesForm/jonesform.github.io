@@ -1,47 +1,78 @@
-fetch('entries.json')
+const contentsContainer = document.querySelector('.contents');
+fetch('contents.json')
   .then(response => response.json())
-  .then(entries => {
-    let entryArea = document.getElementsByClassName('entries-container')[0];
-    let searchInput = document.getElementsByTagName('input')[0];
-    
-    // Function to filter entries
-    const filterEntries = (searchTerm) => {
-      // Split the search term on a comma
-      let searchTerms = searchTerm.split(' ');
-      // Clear any existing entries
-      entryArea.innerHTML = '';
-      // Loop through entries and display only the ones that match all search terms
-      entries.forEach(entry => {
-        let match = true;
-        for (let term of searchTerms) {
-          term = term.trim().toLowerCase();
-          if (!entry.title.toLowerCase().includes(term) && 
-              !entry.tags.some(tag => tag.toLowerCase().includes(term))) {
-            match = false;
-            break;
-          }
-        }
-        if (match) {
-          let entryDiv = document.createElement('div');
-          entryDiv.classList.add("entry");
-          entryDiv.innerHTML = `
-            <h2>${entry.title}</h2>
-            <img src="${entry.image}" alt="${entry.title}">
-            <p>Tags: ${entry.tags.join(', ')}</p>
-            <p>${entry.description}</p>
-            <a href="${entry.link}">< Read More ></a>
-          `;
-          entryArea.appendChild(entryDiv);
-        }
+  .then(data => {
+    const menu = document.createElement('ul');
+    menu.classList.add('content-menu');
+    document.body.appendChild(menu);
+
+    for (const content of data.contents) {
+      const menuItem = document.createElement('li');
+      menuItem.textContent = content.title;
+      menuItem.addEventListener('click', () => {
+        document.querySelector(`[data-id="${content.id}"]`).scrollIntoView();
       });
-    };
+      menu.appendChild(menuItem);
+
+      const contentEl = document.createElement('div');
+      contentEl.classList.add('entry-container');
+      contentEl.setAttribute('data-id', content.id);
+
+      const img = document.createElement('img');
+      img.src = content.image;
+      contentEl.appendChild(img);
+
+      const titleEl = document.createElement('h2');
+      titleEl.textContent = content.title;
+      contentEl.appendChild(titleEl);
+
+      const descriptionEl = document.createElement('p');
+      descriptionEl.textContent = content.description;
+      contentEl.appendChild(descriptionEl);
+
+      const linkEl = document.createElement('a');
+      linkEl.textContent = 'Read More';
+      linkEl.href = content.link;
+      contentEl.appendChild(linkEl);
+
+      contentsContainer.appendChild(contentEl);
+    }
     
-    // Call the filterEntries function when the input changes
-    searchInput.addEventListener('input', () => {
-      filterEntries(searchInput.value);
-    });
-    
-    // Call the filterEntries function initially to display all entries
-    filterEntries('');
-  })
-  .catch(error => console.error(error));
+  });
+  const contentsLink = document.querySelector('.contents-link');
+  let menuOpen = false;
+  
+  contentsLink.addEventListener('click', e => {
+    e.preventDefault();
+  
+    if (!menuOpen) {
+      const menu = document.createElement('div');
+      menu.classList.add('contents-menu');
+  
+      fetch('contents.json')
+        .then(response => response.json())
+        .then(data => {
+          for (const content of data.contents) {
+            const menuItem = document.createElement('a');
+            menuItem.classList.add('contents-menu-item');
+            menuItem.textContent = content.title;
+            menuItem.href = '#' + content.id;
+  
+            menu.appendChild(menuItem);
+          }
+        });
+  
+      contentsContainer.appendChild(menu);
+      menuOpen = true;
+    } else {
+      contentsContainer.removeChild(contentsContainer.lastElementChild);
+      menuOpen = false;
+    }
+  });
+  
+  document.addEventListener('click', e => {
+    if (!e.target.classList.contains('contents-link') && menuOpen) {
+      contentsContainer.removeChild(contentsContainer.lastElementChild);
+      menuOpen = false;
+    }
+  });
