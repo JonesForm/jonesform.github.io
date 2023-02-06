@@ -37,42 +37,63 @@ fetch('contents.json')
 
       contentsContainer.appendChild(contentEl);
     }
-    
   });
-  const contentsLink = document.querySelector('.contents-link');
-  let menuOpen = false;
-  
-  contentsLink.addEventListener('click', e => {
-    e.preventDefault();
-  
-    if (!menuOpen) {
-      const menu = document.createElement('div');
-      menu.classList.add('contents-menu');
-  
-      fetch('contents.json')
-        .then(response => response.json())
-        .then(data => {
-          for (const content of data.contents) {
-            const menuItem = document.createElement('a');
-            menuItem.classList.add('contents-menu-item');
-            menuItem.textContent = content.title;
-            menuItem.href = '#' + content.id;
-  
-            menu.appendChild(menuItem);
-          }
-        });
-  
-      contentsContainer.appendChild(menu);
-      menuOpen = true;
-    } else {
-      contentsContainer.removeChild(contentsContainer.lastElementChild);
-      menuOpen = false;
-    }
-  });
-  
-  document.addEventListener('click', e => {
-    if (!e.target.classList.contains('contents-link') && menuOpen) {
-      contentsContainer.removeChild(contentsContainer.lastElementChild);
-      menuOpen = false;
-    }
-  });
+
+// Get the contents menu item and contents menu container
+const contentsMenuItem = document.querySelector("#contents-menu-item");
+const contentsMenu = document.querySelector("#contents-menu");
+
+// When the contents menu item is clicked, toggle the visibility of the contents menu container
+contentsMenuItem.addEventListener("click", function() {
+  contentsMenu.classList.toggle("show");
+});
+
+// When clicking outside the contents menu container, hide the contents menu container
+window.addEventListener("click", function(event) {
+  if (!event.target.matches("#contents-menu-item")) {
+    contentsMenu.classList.remove("show");
+  }
+});
+
+
+const contentsLink = document.querySelector('.contents-link');
+let menuOpen = false;
+
+contentsLink.addEventListener('click', e => {
+  e.preventDefault();
+
+  if (!menuOpen) {
+    const menu = document.createElement('div');
+    menu.classList.add('contents-menu');
+
+    fetch('contents.json')
+      .then(response => response.json())
+      .then(data => {
+        for (const content of data.contents) {
+          const menuItem = document.createElement('a');
+          menuItem.classList.add('contents-menu-item');
+          menuItem.textContent = content.title;
+          menuItem.href = '#' + content.id;
+
+          menu.appendChild(menuItem);
+        }
+      });
+
+    contentsLink.appendChild(menu);
+    menuOpen = true;
+  } else {
+    contentsLink.removeChild(contentsLink.lastElementChild);
+    menuOpen = false;
+  }
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.classList.contains('contents-link') && menuOpen) {
+    contentsLink.removeChild(contentsLink.lastElementChild);
+    menuOpen = false;
+  }
+});
+document.querySelector(".contents-link").addEventListener("click", function(e) {
+  e.preventDefault();
+  document.querySelector(".contents-menu").classList.toggle("show");
+});
