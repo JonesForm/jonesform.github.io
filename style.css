@@ -1,157 +1,141 @@
 body {
-    font-family: Arial, sans-serif;
+    background-color: #0b0e0cf1;
     margin: 0;
-    padding: 0;
-    background-color: #222831;
-    color: #f2f2f2;
-    width: 100vw;
-    overflow-x: hidden;
+    font-family: Arial, sans-serif;
+    color: white;
 }
 
-a,
-a:visited {
+/* Keep the previous styles */
+
+a {
     text-decoration: none;
-    color: #f2f2f2;
+    color: #138004;
 }
 
 a:hover {
-    color: #f96d00;
+    color: #1ccc05;
+}
+
+a:visited {
+    color: #0a4702;
 }
 
 header {
-    background-color: #222831;
+    background-color: #02290e;
+    padding: 10px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
+    align-items: center; /* Center logo vertically */
 }
 
-header img {
-    height: 50px;
-    width: 150px;
+.logo img {
+    max-width: 100px;
+    margin-right: 20px;
 }
 
-nav {
-    width: 80%;
-    display: flex;
-    justify-content: center;
-}
-
-nav ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-nav a {
-    color: #f2f2f2;
-    text-decoration: none;
-    padding: 10px 20px;
-    font-size: 18px;
-}
-
-nav a:hover {
-    color: #f96d00;
-    text-decoration: none;
-}
+/* Adjust the main container */
 
 main {
     display: flex;
-    justify-content: center;
-}
-
-.contents {
-    height: 100vh;
-    background-color: #393e46;
-    width: 100vw;
+    align-items: center; /* Center items vertically */
     padding: 20px;
 }
 
-.entry-container {
-    margin: 20px auto;
-    /* adds top and bottom margin of 20px and left and right margin of auto */
-    border: 1px solid #f96d00;
-    padding: 20px;
-    width: 70%;
-    text-align: center;
-    /* centers the contents within the container */
-}
-
-.contents img {
-    width: 40px;
-    height: 40px;
-    float: right;
-    margin-left: 20px;
-}
-
-.contents h2 {
-    color: #f96d00;
-    margin: 0;
-    padding-top: 20px;
-    text-align: left;
-}
-
-.contents p {
-    text-align: left;
-}
-
-.contents a {
-    padding-left: 70%;
-}
-
-.contents-menu {
-    position: absolute;
-    top: 50px;
-    left: 0;
-    width: 100%;
-    background-color: #222831;
-    padding: 10px;
-    list-style: none;
-    justify-content: center;
+.tag-bar {
+    max-width: 250px;
+    max-height: 200px; /* Set a fixed maximum height */
+    overflow-y: auto; /* Enable vertical scrolling when content overflows */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     align-items: center;
 }
 
-.contents-menu.show {
+.tag-link {
+    margin-bottom: 0.5em; /* Adjust as needed */
+}
+
+.tag-bar .tag-link {
+    margin-right: 4em;
+}
+
+.search-container {
+    flex: 1; /* Occupy the remaining space */
     display: flex;
-    flex-direction: column;
-    
+    justify-content: center; /* Center the search bar horizontally */
+    align-items: center; /* Center the search bar vertically */
 }
 
-.contents-menu li {
-    display: block;
-    margin-bottom: 10px;
+#searchBar {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
 }
 
-.menu-list {
-    display: none;
+/* Keep the previous styles */
+
+.items-container {
+    flex: 3;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
+.item {
+    width: calc(20% - 20px); /* Adjust the width based on the number of items per row */
+    height: 250px; /* Set a fixed height for the items */
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.item img {
+    max-width: 200px;
+    max-height: 180px; /* Adjust to fit within the fixed height */
+    width: auto;
+    height: auto;
+}
 
 footer {
-    background-color: #222831;
-    justify-content: center;
-    align-items: center;
-    height: 60px;
+    background-color: #02290e;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 
-#footer-images {
+.footer-images {
     display: flex;
     justify-content: center;
-    width: 80%;
-    margin: 20px auto;
+    align-items: center;
+    gap: 10px;
 }
 
-#footer-images img {
-    width: 30px;
-    height: 30px;
-    margin: 0 15px;
+.footer-images img {
+    width: 25px;
+    height: 25px;
 }
 
-footer p {
-    color: #f2f2f2;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    padding-bottom: 20px;
+/* Media queries for responsiveness */
+
+@media screen and (max-width: 1920px) {
+    .item {
+        width: calc(20% - 20px);
+    }
+}
+
+@media screen and (max-width: 1440px) {
+    .item {
+        width: calc(25% - 20px);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .item {
+        width: calc(50% - 20px);
+    }
+    .tag-bar {
+        display: none;
+    }
 }

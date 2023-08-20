@@ -1,66 +1,124 @@
-const contentsContainer = document.querySelector('.contents');
+const searchBar = document.getElementById('searchBar');
+const itemsContainer = document.getElementById('itemsContainer');
+const tagBar = document.getElementById('tagBar');
 
-fetch('contents.json')
-  .then(response => response.json())
-  .then(data => {
-    for (const content of data.contents) {
-      const contentEl = document.createElement('div');
-      contentEl.classList.add('entry-container');
-      contentEl.setAttribute('data-id', content.id);
-
-      const img = document.createElement('img');
-      img.src = content.image;
-      contentEl.appendChild(img);
-
-      const titleEl = document.createElement('h2');
-      titleEl.textContent = content.title;
-      contentEl.appendChild(titleEl);
-
-      const descriptionEl = document.createElement('p');
-      descriptionEl.textContent = content.description;
-      contentEl.appendChild(descriptionEl);
-
-      const linkEl = document.createElement('a');
-      linkEl.textContent = 'Read More';
-      linkEl.href = content.link;
-      contentEl.appendChild(linkEl);
-
-      contentsContainer.appendChild(contentEl);
+// Function to shuffle an array
+const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
     }
-  });
+    return array;
+};
 
-const contentsLink = document.querySelector('.contents-link');
-let menuOpen = false;
+// Load items from data.json
+const loadData = async () => {
+    try {
+        const response = await fetch('data.json');
+        const data = await response.json();
 
-contentsLink.addEventListener('click', e => {
-  e.preventDefault();
+        // Populate tagBar with unique tags (sorted alphabetically)
+        const allTags = data.flatMap(item => item.tag.split(" "));
+        const uniqueTagsSet = new Set(allTags);
+        const tags = Array.from(uniqueTagsSet).sort();
+        tagBar.innerHTML = tags.map(tag => `<a href="#" class="tag-link">${tag}</a>`).join('');
 
-  if (!menuOpen) {
-    const menu = document.createElement('div');
-    menu.classList.add('contents-menu');
+        // Load and display random items
+        loadRandomItems(data);
+    } catch (error) {
+        console.error('Error loading data:', error);
+    }
+};
 
-    fetch('contents.json')
-      .then(response => response.json())
-      .then(data => {
-        for (const content of data.contents) {
-          const menuItem = document.createElement('a');
-          menuItem.classList.add('contents-menu-item');
-          menuItem.textContent = content.title;
-          menuItem.href = '#' + content.id;
+// Event listener for clicking on tags
+tagBar.addEventListener('click', (event) => {
+    if (event.target.classList.contains('tag-link')) {
+        event.preventDefault();
+        const clickedTag = event.target.textContent;
 
-          menu.appendChild(menuItem);
+        // Add clicked tag to the search bar
+        searchBar.value = clickedTag;
+
+        // Filter items based on clicked tag and related tags
+        const relatedTags = clickedTag.split(' ');
+        performSearch(relatedTags);
+    }
+});
+
+// Load and display random items
+const loadRandomItems = (data) => {
+    const shuffledData = shuffleArray(data);
+
+    let itemsToDisplay;
+    const screenWidth = window.innerWidth;
+
+    if (screenWidth > 1920) {
+        itemsToDisplay = shuffledData.slice(0, 6);
+    } else if (screenWidth >= 1440) {
+        itemsToDisplay = shuffledData.slice(0, 16);
+    } else if (screenWidth >= 768) {
+        itemsToDisplay = shuffledData.slice(0, 8);
+    } else {
+        itemsToDisplay = shuffledData.slice(0, 4);
+    }
+
+    // Populate itemsContainer with data
+    itemsContainer.innerHTML = itemsToDisplay.map(item => `
+        <div class="item">
+            <a href="#">
+                <img class="lazyload" src="${item.image}" alt="${item.description}" data-original-src="${item.image}" loading="lazy">
+            </a>
+            <p>${item.description}</p>
+            <div class="resolution-options">
+                ${generateResolutionLinks(item.resolutions)}
+            </div>
+        </div>
+    `).join('');
+};
+
+searchBar.addEventListener('input', () => {
+    const searchTerms = searchBar.value.toLowerCase().split(' ');
+    const allItems = Array.from(document.querySelectorAll('.item'));
+
+    allItems.forEach(item => {
+        const itemText = item.textContent.toLowerCase();
+        const itemTags = item.querySelector('p').textContent.toLowerCase().split(' ');
+
+        let shouldDisplay = true;
+
+        for (const term of searchTerms) {
+            if (!itemText.includes(term) && !itemTags.includes(term)) {
+                shouldDisplay = false;
+                break;
+            }
         }
-      });
 
-    contentsLink.appendChild(menu);
-    menuOpen = true;
-  } else {
-    contentsLink.removeChild(contentsLink.lastElementChild);
-    menuOpen = false;
-  }
+        item.style.display = shouldDisplay ? 'block' : 'none';
+    });
 });
 
-document.querySelector(".contents-link").addEventListener("click", function(e) {
-  e.preventDefault();
-  document.querySelector(".contents-menu").classList.toggle("show");
-});
+const performSearch = (tags) => {
+    const allItems = Array.from(document.querySelectorAll('.item'));
+
+    allItems.forEach(item => {
+        const itemTags = item.querySelector('p').textContent.split(' ');
+        const shouldDisplay = tags.every(tag => itemTags.includes(tag));
+
+        if (shouldDisplay) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+};
+
+const generateResolutionLinks = (resolutions) => {
+    const resolutionLinks = Object.keys(resolutions).map(resolution => `
+        <a href="${resolutions[resolution]}" target="_blank" class="resolution-link">${resolution}</a>
+    `).join('');
+
+    return `<div class="resolution-options">${resolutionLinks}</div>`;
+};
+
+// Initial data load
+loadData();
