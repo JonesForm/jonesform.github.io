@@ -2,11 +2,11 @@
   {
       "description": "Mitsuri Demon Slayer",
       "tag": "discord",
-      "image": "images/wallpaper/mitsuri_1920x1440.png",
+      "image": "Images/wallpaper/mitsuri_1920x1440.png",
       "resolutions": {
-        "1920x1440": "images/wallpaper/mitsuri_1920x1440.png",
-        "1400x1000": "images/wallpaper/discord_1400x1000.png",
-        "1645x1214": "images/wallpaper/discord_1645x1214.png"
+        "1920x1440": "Images/wallpaper/mitsuri_1920x1440.png",
+        "1400x1000": "Images/wallpaper/discord_1400x1000.png",
+        "1645x1214": "Images/wallpaper/discord_1645x1214.png"
       }
   }
 ]
